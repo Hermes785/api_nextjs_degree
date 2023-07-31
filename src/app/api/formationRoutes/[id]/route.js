@@ -6,21 +6,60 @@ dbconnect();
 import { NextResponse } from "next/server";
 
 
-export default async function PUT(request){
-try
- { 
-      const TraningId= await formationModel.findById(request.url.split("/"))
-    if (!TraningId) {
-        return NextResponse.json({message: "Formation introuvable"});
 
+export async function PUT(request) {
+    try {
+        const TraningId = await formationModel.findById(request.url.split("/")[5])
+        console.log(TraningId);
+
+
+        if (!TraningId) {
+            return NextResponse.json({ message: "Formation introuvable" });
+
+        }
+
+        const { title, description, duration, outlet, price, city } = await request.json();
+        const updateTranig = await formationModel.findByIdAndUpdate(
+            TraningId,
+            {
+                title,
+                description,
+                duration,
+                outlet, price,
+                city
+            })
+        console.log(updateTranig);
+        return NextResponse.json(updateTranig)
     }
-    const { title, description, duration, outlet, price, city } = await request.json();
-    const updateTranig = await formationModel.findByidAndUpdate({_id:id},title, description, duration, outlet, price, city)
-  console.log.log(updateTranig);
-   return NextResponse.json({message:'formation modidifier avec succes'})
+    catch (err) {
+        console.log(err);
+        return NextResponse.json({ message: 'Une erreur est survenue lors de la modification ' })
+    }
+}
+
+
+export async function DELETE(request) {
+  try {
+     const traingId = await formationModel.findById(request.url.split('/')[5])
+
+    if (!traingId) {
+        return NextResponse.json({ message: 'formation non trouver' })
+    }
+
+    const deleteTraining= await formationModel.findByIdAndDelete(traingId);
+    console.log('suprimer avec succes')
+    return NextResponse.json({message:'formation supprimer avec succes'})
 }
 catch (err){
-    console.log(err);
-    return NextResponse.json({message:'Ube erreur est survenue lors de la modification '})
+    console.log(err)
+    return NextResponse.json({message:'Une erreur est survenue'})
 }
 }
+
+
+export async function GET(request){ 
+    const trainingById= await formation.Mode.finfById(request.url.split('/')[5])
+    return NextResponse.json(trainbingId)
+}
+
+   
